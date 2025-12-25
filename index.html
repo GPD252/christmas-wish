@@ -3,66 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merry Christmas</title>
+    <title>Christmas Magic 2025</title>
+    <!-- Romantic Festive Font -->
     <link href="fonts.googleapis.com" rel="stylesheet">
     <style>
-        body { background: #011627; color: white; font-family: 'Mountains of Christmas', cursive; text-align: center; overflow-x: hidden; }
-        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; }
-        .snowflake { position: absolute; top: -10px; color: white; animation: fall linear infinite; }
-        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+        :root { --gold: #ffd700; --snow: #ffffff; }
+        body { margin: 0; padding: 0; background: linear-gradient(135deg, #001f3f 0%, #0074D9 100%); color: white; font-family: 'Dancing Script', cursive; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .container { position: relative; z-index: 10; width: 90%; max-width: 600px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; border: 2px solid var(--gold); box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); text-align: center; }
         .hidden { display: none; }
-        .card { padding: 50px; background: rgba(255,255,255,0.1); border-radius: 20px; margin: 50px auto; max-width: 500px; }
-        img.santa { width: 200px; animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .page { animation: fadeIn 1.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* 3D-Style Decor */
+        .santa-sleigh { width: 150px; position: absolute; top: -80px; left: -50px; animation: fly 8s linear infinite; filter: drop-shadow(0 10px 5px rgba(0,0,0,0.5)); }
+        @keyframes fly { 0% { transform: translateX(-100px) rotate(5deg); } 50% { transform: translateX(600px) translateY(-20px) rotate(-5deg); } 100% { transform: translateX(-100px) rotate(5deg); } }
+        
+        .photo-frame { width: 200px; height: 200px; border: 5px solid var(--gold); border-radius: 50%; margin: 20px auto; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        
+        button, .btn { background: var(--gold); color: #001f3f; border: none; padding: 12px 25px; border-radius: 25px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin-top: 20px; transition: transform 0.3s; }
+        button:hover { transform: scale(1.1); }
+        input, textarea { width: 80%; padding: 10px; margin: 10px 0; border-radius: 10px; border: none; font-family: sans-serif; }
     </style>
 </head>
 <body>
-    <div class="snow-container" id="snow"></div>
+    <canvas id="canvas"></canvas>
+    <audio id="bgMusic" loop src="www.soundhelix.com"></audio>
 
-    <!-- Create Mode -->
-    <div id="create-mode" class="card">
-        <h1>Create Your Christmas Wish</h1>
-        <input type="text" id="nameIn" placeholder="Recipient Name" style="padding:10px; margin:5px;"><br>
-        <textarea id="msgIn" placeholder="Your Message" style="padding:10px; margin:5px;"></textarea><br>
-        <button onclick="generateLink()" style="padding:10px 20px; cursor:pointer;">Generate Magic Link</button>
-        <p id="finalLink" style="word-break: break-all; color: gold;"></p>
-    </div>
+    <div class="container">
+        <!-- MODE 1: THE CREATOR (Setup your message) -->
+        <div id="setup-page" class="page">
+            <h1 style="font-family: 'Mountains of Christmas';">Create Your Magic Note</h1>
+            <input type="text" id="targetName" placeholder="Enter Her Name">
+            <textarea id="targetMsg" placeholder="Write your heavenly wish..."></textarea>
+            <p>Upload Photo URL (Optional):</p>
+            <input type="text" id="targetPhoto" placeholder="Link to her photo">
+            <br>
+            <button onclick="generateLink()">Create Magic Link</button>
+            <p id="generatedUrl" style="word-break: break-all; margin-top: 15px; color: var(--gold); font-size: 0.9rem;"></p>
+        </div>
 
-    <!-- View Mode -->
-    <div id="view-mode" class="card hidden">
-        <img src="https://path-to-your-santa-image.png" class="santa" alt="Santa Sleigh">
-        <h1 id="greetName"></h1>
-        <p id="greetMsg" style="font-size: 1.5rem;"></p>
-        <p>❄ Merry Christmas! ❄</p>
+        <!-- MODE 2: THE GREETING (Visible to recipient) -->
+        <div id="greet-page" class="page hidden">
+            <img src="pngimg.com" class="santa-sleigh" alt="Santa">
+            
+            <div id="p1" class="sub-page">
+                <h1 id="showName" style="font-size: 3rem;">Merry Christmas!</h1>
+                <div class="photo-frame">
+                    <img id="showPhoto" src="cdn-icons-png.flaticon.com">
+                </div>
+                <button onclick="nextSubPage(2)">Open Your Gift →</button>
+            </div>
+
+            <div id="p2" class="sub-page hidden">
+                <h2 style="color: var(--gold);">A Heavenly Message...</h2>
+                <p id="showMsg" style="font-size: 1.5rem; line-height: 1.6;"></p>
+                <button onclick="nextSubPage(1)">View Again</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Setup Snowfall
-        const snow = document.getElementById('snow');
-        for(let i=0; i<50; i++) {
-            let s = document.createElement('div');
-            s.className = 'snowflake';
-            s.innerHTML = '❄';
-            s.style.left = Math.random() * 100 + 'vw';
-            s.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            s.style.opacity = Math.random();
-            snow.appendChild(s);
+        // 1. Realistic 3D Snowfall Engine
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, snowflakes = [];
+        function initSnow() {
+            width = window.innerWidth; height = window.innerHeight;
+            canvas.width = width; canvas.height = height;
+            snowflakes = Array.from({length: 150}, () => ({
+                x: Math.random() * width, y: Math.random() * height,
+                r: Math.random() * 4 + 1, d: Math.random() * 150,
+                s: Math.random() * 3 + 1 // speed
+            }));
         }
+        function drawSnow() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.beginPath();
+            snowflakes.forEach(f => {
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                f.y += f.s; f.x += Math.sin(f.d) * 1;
+                if (f.y > height) f.y = -10;
+                f.d += 0.01;
+            });
+            ctx.fill();
+            requestAnimationFrame(drawSnow);
+        }
+        window.addEventListener('resize', initSnow);
+        initSnow(); drawSnow();
 
-        // Logic to show Greeting vs Creator
+        // 2. Navigation & URL Logic
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('to')) {
-            document.getElementById('create-mode').classList.add('hidden');
-            document.getElementById('view-mode').classList.remove('hidden');
-            document.getElementById('greetName').innerText = "Hello, " + urlParams.get('to') + "!";
-            document.getElementById('greetMsg').innerText = urlParams.get('msg');
+            document.getElementById('setup-page').classList.add('hidden');
+            document.getElementById('greet-page').classList.remove('hidden');
+            document.getElementById('showName').innerText = "Merry Christmas, " + urlParams.get('to') + "!";
+            document.getElementById('showMsg').innerText = urlParams.get('msg');
+            if(urlParams.get('img')) document.getElementById('showPhoto').src = urlParams.get('img');
+            
+            // Interaction to start music
+            document.body.addEventListener('click', () => { document.getElementById('bgMusic').play(); }, {once: true});
         }
 
         function generateLink() {
-            const name = encodeURIComponent(document.getElementById('nameIn').value);
-            const msg = encodeURIComponent(document.getElementById('msgIn').value);
-            const link = window.location.origin + window.location.pathname + "?to=" + name + "&msg=" + msg;
-            document.getElementById('finalLink').innerHTML = "Copy this link to send:<br><b>" + link + "</b>";
+            const name = encodeURIComponent(document.getElementById('targetName').value);
+            const msg = encodeURIComponent(document.getElementById('targetMsg').value);
+            const img = encodeURIComponent(document.getElementById('targetPhoto').value);
+            const link = window.location.origin + window.location.pathname + `?to=${name}&msg=${msg}&img=${img}`;
+            document.getElementById('generatedUrl').innerHTML = `Copy & Send this Link:<br><strong>${link}</strong>`;
+        }
+
+        function nextSubPage(num) {
+            document.querySelectorAll('.sub-page').forEach(p => p.classList.add('hidden'));
+            document.getElementById('p' + num).classList.remove('hidden');
         }
     </script>
 </body>
