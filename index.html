@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas</title>
+    <link href="fonts.googleapis.com" rel="stylesheet">
+    <style>
+        body { background: #011627; color: white; font-family: 'Mountains of Christmas', cursive; text-align: center; overflow-x: hidden; }
+        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1000; }
+        .snowflake { position: absolute; top: -10px; color: white; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+        .hidden { display: none; }
+        .card { padding: 50px; background: rgba(255,255,255,0.1); border-radius: 20px; margin: 50px auto; max-width: 500px; }
+        img.santa { width: 200px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    </style>
+</head>
+<body>
+    <div class="snow-container" id="snow"></div>
+
+    <!-- Create Mode -->
+    <div id="create-mode" class="card">
+        <h1>Create Your Christmas Wish</h1>
+        <input type="text" id="nameIn" placeholder="Recipient Name" style="padding:10px; margin:5px;"><br>
+        <textarea id="msgIn" placeholder="Your Message" style="padding:10px; margin:5px;"></textarea><br>
+        <button onclick="generateLink()" style="padding:10px 20px; cursor:pointer;">Generate Magic Link</button>
+        <p id="finalLink" style="word-break: break-all; color: gold;"></p>
+    </div>
+
+    <!-- View Mode -->
+    <div id="view-mode" class="card hidden">
+        <img src="https://path-to-your-santa-image.png" class="santa" alt="Santa Sleigh">
+        <h1 id="greetName"></h1>
+        <p id="greetMsg" style="font-size: 1.5rem;"></p>
+        <p>❄ Merry Christmas! ❄</p>
+    </div>
+
+    <script>
+        // Setup Snowfall
+        const snow = document.getElementById('snow');
+        for(let i=0; i<50; i++) {
+            let s = document.createElement('div');
+            s.className = 'snowflake';
+            s.innerHTML = '❄';
+            s.style.left = Math.random() * 100 + 'vw';
+            s.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            s.style.opacity = Math.random();
+            snow.appendChild(s);
+        }
+
+        // Logic to show Greeting vs Creator
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('to')) {
+            document.getElementById('create-mode').classList.add('hidden');
+            document.getElementById('view-mode').classList.remove('hidden');
+            document.getElementById('greetName').innerText = "Hello, " + urlParams.get('to') + "!";
+            document.getElementById('greetMsg').innerText = urlParams.get('msg');
+        }
+
+        function generateLink() {
+            const name = encodeURIComponent(document.getElementById('nameIn').value);
+            const msg = encodeURIComponent(document.getElementById('msgIn').value);
+            const link = window.location.origin + window.location.pathname + "?to=" + name + "&msg=" + msg;
+            document.getElementById('finalLink').innerHTML = "Copy this link to send:<br><b>" + link + "</b>";
+        }
+    </script>
+</body>
+</html>
