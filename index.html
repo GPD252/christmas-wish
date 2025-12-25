@@ -3,124 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Magic 2025</title>
-    <!-- Use a festive font -->
+    <title>Christmas Miracle 2025</title>
     <link href="fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --gold: #ffd700; --night: #001b3a; --snow: #ffffff; }
-        body { 
-            margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive; 
-            background: linear-gradient(to bottom, #001b3a 0%, #003366 50%, #adb5bd 100%); /* Heavenly Gradient */
-            height: 100vh; color: white; display: flex; align-items: center; justify-content: center;
-        }
+        :root { --gold: #ffd700; --night: #001b3a; }
+        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive; background: linear-gradient(to bottom, #001b3a, #003366, #adb5bd); height: 100vh; color: white; display: flex; align-items: center; justify-content: center; }
         #snowCanvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
         
-        /* The Bright Moon */
-        .moon { position: absolute; top: 40px; right: 60px; width: 120px; height: 120px; background: #fffdf5; border-radius: 50%; box-shadow: 0 0 80px 30px white; z-index: 2; }
+        /* THE MOON & FLYING SCENE */
+        .moon { position: absolute; top: 30px; right: 50px; font-size: 80px; text-shadow: 0 0 40px white; z-index: 2; }
+        .fly { position: absolute; top: 15%; left: -300px; animation: flyAcross 15s linear infinite; z-index: 5; font-size: 50px; }
+        @keyframes flyAcross { 0% { left: -300px; } 100% { left: 110vw; } }
 
-        /* Animated Santa Sleigh & Reindeers using Emojis (Guaranteed to work) */
-        .flying-scene {
-            position: absolute; top: 15%; left: -600px; animation: flyAcross 18s linear infinite; z-index: 5;
-            font-size: 50px; /* Adjusts the size of all characters */
-        }
-        .deer-emoji { animation: gallop 0.6s infinite alternate; display: inline-block; margin-right: 10px; }
-
-        @keyframes flyAcross {
-            0% { left: -600px; transform: scale(0.8) rotate(5deg); }
-            100% { left: 110vw; transform: scale(0.8) rotate(-5deg); }
-        }
-        @keyframes gallop { from { transform: translateY(0); } to { transform: translateY(-15px); } }
-
-        /* Interface Layout */
-        .container { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .card { background: rgba(255, 255, 255, 0.15); padding: 30px; border-radius: 25px; backdrop-filter: blur(15px); border: 2px solid var(--gold); text-align: center; width: 360px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        /* INTERFACE & PAGES */
+        .card { background: rgba(255, 255, 255, 0.15); padding: 25px; border-radius: 20px; backdrop-filter: blur(15px); border: 2px solid var(--gold); text-align: center; width: 350px; z-index: 10; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
         .hidden { display: none; }
+        input, textarea { width: 90%; margin: 8px 0; padding: 10px; border-radius: 10px; border: none; font-family: sans-serif; }
+        button { background: var(--gold); color: var(--night); border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 5px; }
         
-        input, textarea { width: 90%; margin: 8px 0; padding: 10px; border-radius: 10px; border: none; font-size: 0.9rem; }
-        button { background: var(--gold); color: var(--night); border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
-        
-        .user-photo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid white; object-fit: cover; margin: 20px auto; display: block; box-shadow: 0 0 20px white; }
+        .user-photo { width: 180px; height: 180px; border-radius: 50%; border: 5px solid white; object-fit: cover; margin: 15px auto; display: block; box-shadow: 0 0 20px white; }
+        #linkOut { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
     <div class="moon">🌕</div>
-    
-    <div class="flying-scene">
-        <span class="deer-emoji">🦌</span>
-        <span class="deer-emoji">🦌</span>
-        <span class="deer-emoji">🦌</span>
-        <span class="deer-emoji">🦌</span>
-        <span class="sleigh-emoji">🛷</span>
-        <span class="santa-emoji">🎅</span>
+    <div class="fly">🦌🦌🛷🎅</div>
+    <canvas id="snowCanvas"></canvas>
+    <audio id="bgMusic" loop></audio>
+
+    <!-- PAGE 1: CREATOR / BULK SENDER -->
+    <div id="setup" class="card">
+        <h1 style="color:var(--gold); margin:0;">Magic Wish Maker</h1>
+        <input type="text" id="inName" placeholder="Recipient's Name">
+        <textarea id="inMsg" placeholder="Personal Message..."></textarea>
+        
+        <p style="font-size:0.7rem; margin:5px 0;">Photo Link (PostImages.org) or Upload:</p>
+        <input type="text" id="inUrl" placeholder="Direct Link (URL)">
+        <input type="file" id="inFile" accept="image/*" style="font-size:0.7rem;">
+        
+        <button onclick="generate()">Generate Magic Link</button>
+        
+        <div id="linkOut">
+            <p id="finalUrl" style="font-size:0.6rem; word-break:break-all;"></p>
+            <button onclick="copyLink()">Copy Link</button>
+            <button onclick="shortenLink()" style="background:cyan;">Make Short Link</button>
+        </div>
+        <p style="font-size:0.6rem; margin-top:10px;">Note: Bulk send by refreshing and creating more!</p>
     </div>
 
-    <canvas id="snowCanvas"></canvas>
-    <audio id="bgMusic" loop src="www.soundhelix.com"></audio>
-
-    <div class="container">
-        <!-- SETUP FORM (Visible to you) -->
-        <div id="setup" class="card">
-            <h1 style="color:var(--gold); margin:0;">Christmas Wish 2025</h1>
-            <input type="text" id="inName" placeholder="Recipient's Name">
-            <textarea id="inMsg" placeholder="Your Sweet Message..."></textarea>
-            <p style="font-size:0.8rem; margin:5px 0;">Paste "Direct Link" of photo (from PostImages):</p>
-            <input type="text" id="inUrl" placeholder="i.postimg.cc">
-            <button onclick="generate()">Generate Magic Link</button>
-            <div id="linkBox" style="display:none; margin-top:15px; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;">
-                <p id="finalUrl" style="font-size:0.6rem; word-break:break-all;"></p>
-                <button onclick="copyLink()">Copy & Send Link</button>
-            </div>
-        </div>
-
-        <!-- GREETING VIEW (Visible to recipient) -->
-        <div id="view" class="card hidden">
-            <h1 id="outName" style="color:var(--gold); font-size:2.5rem;"></h1>
-            <img id="outImg" src="" class="user-photo" onerror="this.src='via.placeholder.com'">
-            <p id="outMsg" style="font-size: 1.4rem;"></p>
-            <p>❄️ Merry Christmas ❄️</p>
-            <p style="font-size:0.7rem; opacity:0.8;">(Click screen for Music 🎵)</p>
-        </div>
+    <!-- PAGE 2: GREETING VIEW -->
+    <div id="view" class="card hidden">
+        <h1 id="outName" style="color:var(--gold); font-size:2.5rem;"></h1>
+        <img id="outImg" src="" class="user-photo">
+        <p id="outMsg" style="font-size: 1.4rem;"></p>
+        <p>❄️ Merry Christmas 2025 ❄️</p>
+        <p style="font-size:0.7rem;">Click screen for Music 🎵</p>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
+        let uploadedBase64 = "";
 
+        // Handle Image Resize & Upload (Base64)
+        document.getElementById('inFile').onchange = function(e) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 200; canvas.height = 200;
+                    canvas.getContext('2d').drawImage(img, 0, 0, 200, 200);
+                    uploadedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+                };
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(e.target.files);
+        };
+
+        // VIEW LOGIC
         if (params.has('to')) {
             document.getElementById('setup').classList.add('hidden');
             document.getElementById('view').classList.remove('hidden');
-            document.getElementById('outName').innerText = "For You, " + params.get('to');
+            document.getElementById('outName').innerText = "To " + params.get('to');
             document.getElementById('outMsg').innerText = params.get('msg');
-            
-            const imgPath = params.get('img');
-            if(imgPath) {
-                document.getElementById('outImg').src = imgPath;
-            } else {
-                document.getElementById('outImg').style.display = 'none';
-            }
-            
-            document.body.onclick = () => document.getElementById('bgMusic').play();
+            document.getElementById('outImg').src = params.get('img');
+            const audio = document.getElementById('bgMusic');
+            audio.src = "www.soundhelix.com";
+            document.body.onclick = () => audio.play();
         }
 
         function generate() {
             const n = encodeURIComponent(document.getElementById('inName').value);
             const m = encodeURIComponent(document.getElementById('inMsg').value);
-            const i = encodeURIComponent(document.getElementById('inUrl').value);
-            
+            const i = encodeURIComponent(uploadedBase64 || document.getElementById('inUrl').value);
             const link = window.location.origin + window.location.pathname + `?to=${n}&msg=${m}&img=${i}`;
             document.getElementById('finalUrl').innerText = link;
-            document.getElementById('linkBox').style.display = "block";
+            document.getElementById('linkOut').style.display = "block";
         }
 
         function copyLink() {
             navigator.clipboard.writeText(document.getElementById('finalUrl').innerText);
-            alert("Link Copied! Send it to her now.");
+            alert("Link Copied!");
         }
 
-        // Snowfall Engine (for realistic snow)
+        function shortenLink() {
+            const longUrl = document.getElementById('finalUrl').innerText;
+            window.open(`tinyurl.com{encodeURIComponent(longUrl)}`, '_blank');
+            alert("TinyURL opened! Copy the short link there.");
+        }
+
+        // Snowfall Engine
         const cvs = document.getElementById('snowCanvas'); const ctx = cvs.getContext('2d');
         let f = [];
         function init() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; f = Array.from({length: 120}, () => ({x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*3+1, s: Math.random()*2+1})); }
-        function draw() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle = "white"; f.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > c.height) p.y = -10; }); requestAnimationFrame(draw); }
+        function draw() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle = "white"; f.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > cvs.height) p.y = -10; }); requestAnimationFrame(draw); }
         window.onresize = init; init(); draw();
     </script>
 </body>
