@@ -3,76 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas 2025 Magic</title>
+    <title>Christmas Magic 2025</title>
     <link href="fonts.googleapis.com" rel="stylesheet">
     <style>
         body { 
             margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive;
             background: linear-gradient(to bottom, #001b3a, #003366, #011627); height: 100vh;
         }
-
-        /* 1. THE MOON */
-        .moon {
-            position: absolute; top: 40px; right: 60px; width: 100px; height: 100px;
-            background: #fffdf5; border-radius: 50%; box-shadow: 0 0 50px white; z-index: 2;
-        }
-
-        /* 2. FLYING ANIMATION */
-        .flying-group {
-            position: absolute; top: 20%; left: -500px; display: flex; align-items: center;
-            animation: flyAcross 12s linear infinite; z-index: 10;
-        }
-
-        .sleigh-img { width: 180px; filter: drop-shadow(0 5px 10px black); }
-        .deer-img { width: 90px; margin-left: -20px; animation: hop 0.5s infinite alternate; }
-
-        @keyframes flyAcross {
-            0% { left: -500px; transform: rotate(5deg); }
-            100% { left: 110vw; transform: rotate(-5deg); }
-        }
-
-        @keyframes hop {
-            from { transform: translateY(0); }
-            to { transform: translateY(-15px); }
-        }
-
-        /* 3. LAYOUT */
         #snowCanvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        .moon { position: absolute; top: 40px; right: 60px; width: 100px; height: 100px; background: #fffdf5; border-radius: 50%; box-shadow: 0 0 50px white; z-index: 2; }
+        .flying-group { position: absolute; top: 20%; left: -500px; display: flex; align-items: center; animation: flyAcross 12s linear infinite; z-index: 10; }
+        .sleigh-img { width: 180px; } .deer-img { width: 90px; margin-left: -20px; animation: hop 0.5s infinite alternate; }
+        @keyframes flyAcross { 0% { left: -500px; transform: rotate(5deg); } 100% { left: 110vw; transform: rotate(-5deg); } }
+        @keyframes hop { from { transform: translateY(0); } to { transform: translateY(-15px); } }
         .container { position: relative; z-index: 20; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .card { background: rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); border: 2px solid gold; text-align: center; color: white; width: 350px; }
+        .card { background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); border: 2px solid gold; text-align: center; color: white; width: 350px; }
         .hidden { display: none; }
-        input, textarea { width: 90%; margin: 10px 0; padding: 10px; border-radius: 10px; border: none; }
-        button { background: gold; color: #001b3a; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        input, textarea { width: 90%; margin: 8px 0; padding: 8px; border-radius: 8px; border: none; font-family: sans-serif; }
+        button { background: gold; color: #001b3a; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .user-photo { width: 180px; height: 180px; border-radius: 50%; border: 4px solid white; object-fit: cover; margin-top: 15px; }
     </style>
 </head>
 <body>
     <div class="moon"></div>
-    
     <div class="flying-group">
-        <!-- Reindeer first, then Santa's sleigh (baggi) -->
-        <img src="./reindeer.png" class="deer-img">
-        <img src="./reindeer.png" class="deer-img">
-        <img src="./sleigh.png" class="sleigh-img">
+        <img src="./reindeer.png" class="deer-img"><img src="./reindeer.png" class="deer-img"><img src="./sleigh.png" class="sleigh-img">
     </div>
-
     <canvas id="snowCanvas"></canvas>
     <audio id="bgMusic" loop src="www.soundhelix.com"></audio>
 
     <div class="container">
-        <!-- Setup Form -->
+        <!-- FORM PAGE -->
         <div id="setup" class="card">
             <h1>Create Magic</h1>
-            <input type="text" id="inName" placeholder="Her Name">
-            <textarea id="inMsg" placeholder="Your Message"></textarea>
-            <input type="text" id="inImg" placeholder="Photo URL">
-            <br><button onclick="generate()">Create Link</button>
-            <p id="linkOut" style="word-break: break-all; color: gold;"></p>
+            <input type="text" id="inName" placeholder="Recipient Name">
+            <textarea id="inMsg" placeholder="Personal Message"></textarea>
+            
+            <p style="font-size:0.9rem; margin-bottom:5px;">Option 1: Paste Image Link</p>
+            <input type="text" id="inUrl" placeholder="Image URL (e.g., https://...)">
+            
+            <p style="font-size:0.9rem; margin-bottom:5px;">Option 2: Upload from Computer</p>
+            <input type="file" id="inFile" accept="image/*" style="color:white; font-size:0.8rem;">
+            
+            <br><button onclick="generate()">Generate Magic Link</button>
+            <p id="linkOut" style="word-break: break-all; color: gold; font-size: 0.7rem; margin-top: 10px;"></p>
         </div>
 
-        <!-- Greeting View -->
-        <div id="greet" class="card hidden">
+        <!-- VIEW PAGE -->
+        <div id="p1" class="card hidden">
             <h1 id="outName"></h1>
-            <img id="outImg" src="" style="width:150px; border-radius:50%; border:4px solid white;">
+            <img id="outImg" src="" class="user-photo">
             <p id="outMsg" style="font-size: 1.2rem;"></p>
             <p>❄ Merry Christmas 2025 ❄</p>
         </div>
@@ -80,39 +60,40 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
+        let base64String = "";
+
+        // Handle Image Upload to Base64
+        document.getElementById('inFile').addEventListener('change', function() {
+            const reader = new FileReader();
+            reader.onload = function() { base64String = reader.result; };
+            reader.readAsDataURL(this.files[0]);
+        });
+
         if (params.has('to')) {
             document.getElementById('setup').classList.add('hidden');
-            document.getElementById('greet').classList.remove('hidden');
+            document.getElementById('p1').classList.remove('hidden');
             document.getElementById('outName').innerText = "To " + params.get('to');
             document.getElementById('outMsg').innerText = params.get('msg');
-            document.getElementById('outImg').src = params.get('img') || "via.placeholder.com";
+            document.getElementById('outImg').src = params.get('img');
             document.body.onclick = () => document.getElementById('bgMusic').play();
         }
 
         function generate() {
             const n = encodeURIComponent(document.getElementById('inName').value);
             const m = encodeURIComponent(document.getElementById('inMsg').value);
-            const i = encodeURIComponent(document.getElementById('inImg').value);
+            // Use File Upload (Base64) if available, otherwise use URL link
+            const imgData = base64String ? base64String : document.getElementById('inUrl').value;
+            const i = encodeURIComponent(imgData);
+            
             const link = window.location.origin + window.location.pathname + `?to=${n}&msg=${m}&img=${i}`;
-            document.getElementById('linkOut').innerHTML = `Copy link:<br><strong>${link}</strong>`;
+            document.getElementById('linkOut').innerHTML = `Copy & Send:<br><strong>${link}</strong>`;
         }
 
-        // Snowfall Logic
-        const cvs = document.getElementById('snowCanvas');
-        const ctx = cvs.getContext('2d');
-        let flakes = [];
-        function init() {
-            cvs.width = window.innerWidth; cvs.height = window.innerHeight;
-            flakes = Array.from({length: 100}, () => ({ x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*3+1, s: Math.random()*2+1 }));
-        }
-        function draw() {
-            ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle = "white";
-            flakes.forEach(f => {
-                ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); ctx.fill();
-                f.y += f.s; if(f.y > cvs.height) f.y = -10;
-            });
-            requestAnimationFrame(draw);
-        }
+        // 3D Snowfall Engine
+        const cvs = document.getElementById('snowCanvas'); const ctx = cvs.getContext('2d');
+        let f = [];
+        function init() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; f = Array.from({length: 100}, () => ({x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*3+1, s: Math.random()*2+1})); }
+        function draw() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle = "white"; f.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > cvs.height) p.y = -10; }); requestAnimationFrame(draw); }
         window.onresize = init; init(); draw();
     </script>
 </body>
