@@ -3,74 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Magic 2025</title>
+    <title>Heavenly Christmas 2025</title>
     <link href="fonts.googleapis.com" rel="stylesheet">
     <style>
         body { 
             margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive;
-            background: linear-gradient(to bottom, #1e3c72, #2a5298, #f0f4f8); /* Heavenly Blue Gradient */
+            background: linear-gradient(to bottom, #001b3a 0%, #003366 50%, #6699ff 100%);
             height: 100vh; color: white; display: flex; align-items: center; justify-content: center;
         }
+
+        /* 1. THE MOON */
+        .moon {
+            position: absolute; top: 50px; right: 80px;
+            width: 100px; height: 100px;
+            background: #fffdf5; border-radius: 50%;
+            box-shadow: 0 0 50px 20px rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+
+        /* 2. FLYING ANIMATION (SANTA & DEER) */
+        .flying-group {
+            position: absolute; top: 15%; left: -500px;
+            display: flex; align-items: center;
+            animation: flyAcross 15s linear infinite;
+            z-index: 5; pointer-events: none;
+        }
+
+        .sleigh { width: 150px; filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.5)); }
+        .reindeer { width: 80px; margin-left: -20px; animation: gallop 0.6s infinite alternate; }
+
+        @keyframes flyAcross {
+            0% { transform: translateX(0) translateY(0) rotate(5deg); }
+            50% { transform: translateX(110vw) translateY(-50px) rotate(-2deg); }
+            100% { transform: translateX(180vw) translateY(0); }
+        }
+
+        @keyframes gallop {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        /* 3. SNOW & LAYOUT */
         #canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
-        .container { position: relative; z-index: 10; text-align: center; width: 90%; max-width: 500px; }
-        .page { display: none; background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); border: 2px solid #ffd700; animation: fadeIn 1.5s; }
-        .active { display: block; }
+        .container { position: relative; z-index: 10; text-align: center; width: 90%; max-width: 450px; }
+        .page { display: none; background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(15px); border: 1px solid rgba(255,215,0,0.5); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .active { display: block; animation: fadeIn 2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        button { background: #ffd700; color: #001f3f; border: none; padding: 10px 25px; border-radius: 20px; font-size: 1.2rem; cursor: pointer; margin-top: 20px; }
-        img { width: 100%; max-width: 250px; border-radius: 15px; margin-bottom: 15px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
-        input, textarea { width: 85%; padding: 10px; margin: 10px 0; border-radius: 10px; border: none; }
+
+        button { background: #ffd700; color: #001b3a; border: none; padding: 12px 30px; border-radius: 30px; font-size: 1.2rem; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        .user-photo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid gold; object-fit: cover; margin-bottom: 15px; }
+        input, textarea { width: 80%; padding: 10px; margin: 10px 0; border-radius: 8px; border: none; }
     </style>
 </head>
 <body>
+    <div class="moon"></div>
+    
+    <!-- FLYING GRAPHICS -->
+    <div class="flying-group">
+        <img src="pngimg.com" class="sleigh" alt="Sleigh">
+        <img src="pngimg.com" class="reindeer" alt="Deer">
+        <img src="pngimg.com" class="reindeer" alt="Deer">
+    </div>
+
     <canvas id="canvas"></canvas>
     <audio id="bgMusic" loop src="www.soundhelix.com"></audio>
 
     <div class="container">
-        <!-- SETUP: THE CREATOR PAGE (Hidden when link is clicked) -->
+        <!-- FORM PAGE -->
         <div id="setup" class="page active">
-            <h1>Create the Magic</h1>
-            <input type="text" id="inName" placeholder="Recipient Name">
-            <textarea id="inMsg" placeholder="Your Sweet Message"></textarea>
-            <input type="text" id="inImg" placeholder="Personal Photo Link (Direct URL)">
-            <br><button onclick="generateLink()">Get Magic Link</button>
-            <p id="linkOut" style="word-break: break-all; color: #ffd700; margin-top: 15px;"></p>
+            <h1 style="color: gold;">Christmas Wish Maker</h1>
+            <input type="text" id="inName" placeholder="Her Name">
+            <textarea id="inMsg" placeholder="Your Heavenly Note"></textarea>
+            <input type="text" id="inImg" placeholder="Direct Photo Link (URL)">
+            <br><button onclick="generateLink()">Create Magic Link</button>
+            <p id="linkOut" style="word-break: break-all; color: #ffd700; font-size: 0.8rem;"></p>
         </div>
 
-        <!-- PAGE 1: SANTA WITH BAGGI (SLEIGH) -->
+        <!-- VIEW PAGE -->
         <div id="p1" class="page">
-            <!-- SANTA WITH BAGGI IMAGE LINK ADDED HERE -->
-            <img src="pngimg.com" alt="Santa Sleigh">
-            <h1>Ho Ho Ho!</h1>
-            <p>Santa is flying through the ice rain just for you...</p>
-            <button onclick="showPage('p2')">Next Scene →</button>
-        </div>
-
-        <!-- PAGE 2: REINDEERS -->
-        <div id="p2" class="page">
-            <!-- REINDEERS IMAGE LINK ADDED HERE -->
-            <img src="pngimg.com" alt="Reindeers">
-            <h2 id="greetName">Merry Christmas</h2>
-            <p>The reindeer have brought a special memory...</p>
-            <button onclick="showPage('p3')">See the Surprise →</button>
-        </div>
-
-        <!-- PAGE 3: THE FINAL PHOTO & MESSAGE -->
-        <div id="p3" class="page">
-            <img id="greetImg" src="via.placeholder.com" style="border: 5px solid white;">
-            <p id="greetMsg" style="font-size: 1.4rem;"></p>
-            <button onclick="showPage('p1')">Watch Again</button>
+            <h1 id="greetName">Merry Christmas</h1>
+            <img id="greetImg" src="" class="user-photo">
+            <p id="greetMsg" style="font-size: 1.3rem; line-height: 1.5;"></p>
+            <p style="color: gold;">❄ Click anywhere for Music ❄</p>
         </div>
     </div>
 
     <script>
-        // 1. URL LOGIC & SETUP
+        // 1. URL PARAMETERS LOGIC
         const params = new URLSearchParams(window.location.search);
         if (params.has('to')) {
-            showPage('p1');
-            document.getElementById('greetName').innerText = "For You, " + params.get('to');
+            document.getElementById('setup').classList.remove('active');
+            document.getElementById('p1').classList.add('active');
+            document.getElementById('greetName').innerText = "For My Love, " + params.get('to');
             document.getElementById('greetMsg').innerText = params.get('msg');
-            if(params.get('img')) document.getElementById('greetImg').src = params.get('img');
+            document.getElementById('greetImg').src = params.get('img') || "via.placeholder.com";
+            
             document.body.addEventListener('click', () => { document.getElementById('bgMusic').play(); }, {once: true});
         }
 
@@ -79,31 +106,33 @@
             const msg = encodeURIComponent(document.getElementById('inMsg').value);
             const img = encodeURIComponent(document.getElementById('inImg').value);
             const link = window.location.origin + window.location.pathname + `?to=${name}&msg=${msg}&img=${img}`;
-            document.getElementById('linkOut').innerHTML = `Copy & Send:<br><strong>${link}</strong>`;
+            document.getElementById('linkOut').innerHTML = `Send this to her:<br><strong>${link}</strong>`;
         }
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        // 2. 3D-STYLE SNOWFALL CANVAS (Realistic Effect)
+        // 2. 3D-STYLE SNOWFALL
         const cvs = document.getElementById('canvas');
         const ctx = cvs.getContext('2d');
         let flakes = [];
         function init() {
             cvs.width = window.innerWidth; cvs.height = window.innerHeight;
-            flakes = Array.from({length: 100}, () => ({ x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*3+1, s: Math.random()*2+1 }));
+            flakes = Array.from({length: 120}, () => ({ 
+                x: Math.random()*cvs.width, 
+                y: Math.random()*cvs.height, 
+                r: Math.random()*3+1, 
+                s: Math.random()*2+0.5,
+                o: Math.random() 
+            }));
         }
         function draw() {
             ctx.clearRect(0,0,cvs.width,cvs.height);
-            ctx.fillStyle = "white";
-            ctx.beginPath();
             flakes.forEach(f => {
-                ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${f.o})`;
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+                ctx.fill();
                 f.y += f.s; if(f.y > cvs.height) f.y = -10;
             });
-            ctx.fill(); requestAnimationFrame(draw);
+            requestAnimationFrame(draw);
         }
         window.onresize = init; init(); draw();
     </script>
