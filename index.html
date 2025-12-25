@@ -18,7 +18,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         button { background: #ffd700; color: #001f3f; border: none; padding: 10px 25px; border-radius: 20px; font-size: 1.2rem; cursor: pointer; margin-top: 20px; }
-        img { width: 100%; max-width: 250px; border-radius: 15px; margin-bottom: 15px; }
+        img { width: 100%; max-width: 250px; border-radius: 15px; margin-bottom: 15px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5)); }
         input, textarea { width: 85%; padding: 10px; margin: 10px 0; border-radius: 10px; border: none; }
     </style>
 </head>
@@ -27,7 +27,7 @@
     <audio id="bgMusic" loop src="www.soundhelix.com"></audio>
 
     <div class="container">
-        <!-- SETUP: THE CREATOR PAGE -->
+        <!-- SETUP: THE CREATOR PAGE (Hidden when link is clicked) -->
         <div id="setup" class="page active">
             <h1>Create the Magic</h1>
             <input type="text" id="inName" placeholder="Recipient Name">
@@ -37,17 +37,19 @@
             <p id="linkOut" style="word-break: break-all; color: #ffd700; margin-top: 15px;"></p>
         </div>
 
-        <!-- PAGE 1: SANTA ARRIVAL -->
+        <!-- PAGE 1: SANTA WITH BAGGI (SLEIGH) -->
         <div id="p1" class="page">
+            <!-- SANTA WITH BAGGI IMAGE LINK ADDED HERE -->
             <img src="pngimg.com" alt="Santa Sleigh">
             <h1>Ho Ho Ho!</h1>
             <p>Santa is flying through the ice rain just for you...</p>
             <button onclick="showPage('p2')">Next Scene →</button>
         </div>
 
-        <!-- PAGE 2: REINDEER & FLOWERS -->
+        <!-- PAGE 2: REINDEERS -->
         <div id="p2" class="page">
-            <img src="pngimg.com" alt="Reindeer">
+            <!-- REINDEERS IMAGE LINK ADDED HERE -->
+            <img src="pngimg.com" alt="Reindeers">
             <h2 id="greetName">Merry Christmas</h2>
             <p>The reindeer have brought a special memory...</p>
             <button onclick="showPage('p3')">See the Surprise →</button>
@@ -85,7 +87,7 @@
             document.getElementById(id).classList.add('active');
         }
 
-        // 2. 3D-STYLE SNOWFALL CANVAS
+        // 2. 3D-STYLE SNOWFALL CANVAS (Realistic Effect)
         const cvs = document.getElementById('canvas');
         const ctx = cvs.getContext('2d');
         let flakes = [];
