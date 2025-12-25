@@ -3,130 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Miracle 2025</title>
+    <title>Merry Christmas My Love</title>
     <link href="fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --gold: #ffd700; --white: #ffffff; --night: #001b3a; }
-        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive; background: linear-gradient(to bottom, #001b3a, #003366, #adb5bd); height: 100vh; color: white; }
+        :root { --gold: #ffd700; }
+        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive; background: linear-gradient(to bottom, #001b3a, #003366, #adb5bd); height: 100vh; color: white; display: flex; align-items: center; justify-content: center; }
         #snowCanvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
-        
-        .moon { position: absolute; top: 40px; right: 60px; font-size: 100px; z-index: 2; text-shadow: 0 0 30px white; }
-
-        /* Full Body Animated Santa & Reindeers using Emojis */
-        .flying-scene {
-            position: absolute; top: 15%; left: -600px; animation: flyAcross 18s linear infinite; z-index: 5;
-            font-size: 50px; /* Controls the size of all emojis */
-        }
-        .deer-emoji { animation: gallop 0.6s infinite alternate; display: inline-block; margin-right: 10px; }
-
-        @keyframes flyAcross {
-            0% { left: -600px; transform: scale(0.8) rotate(5deg); }
-            100% { left: 110vw; transform: scale(0.8) rotate(-5deg); }
-        }
-        @keyframes gallop { from { transform: translateY(0); } to { transform: translateY(-15px); } }
-
-        /* LAYOUT DESIGN */
-        .container { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .card { background: rgba(255, 255, 255, 0.15); padding: 30px; border-radius: 25px; backdrop-filter: blur(15px); border: 2px solid var(--gold); text-align: center; width: 360px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        .moon { position: absolute; top: 30px; right: 50px; font-size: 80px; text-shadow: 0 0 40px white; z-index: 2; }
+        .fly { position: absolute; top: 15%; left: -300px; animation: fly 15s linear infinite; z-index: 5; font-size: 50px; }
+        @keyframes fly { 0% { left: -300px; } 100% { left: 110vw; } }
+        .card { background: rgba(255, 255, 255, 0.15); padding: 30px; border-radius: 20px; backdrop-filter: blur(15px); border: 2px solid var(--gold); text-align: center; width: 350px; z-index: 10; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
         .hidden { display: none; }
-        
-        input, textarea { width: 90%; margin: 8px 0; padding: 10px; border-radius: 10px; border: none; font-size: 0.9rem; }
-        button { background: var(--gold); color: var(--night); border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
-        
-        .user-photo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid white; object-fit: cover; margin: 20px auto; display: block; box-shadow: 0 0 20px white; }
-        #linkBox { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; margin-top: 15px; display: none; font-size: 0.7rem; }
+        input, textarea { width: 90%; margin: 8px 0; padding: 10px; border-radius: 10px; border: none; font-family: sans-serif; }
+        button { background: var(--gold); color: #001b3a; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        .user-photo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid white; object-fit: cover; margin: 15px auto; display: block; box-shadow: 0 0 20px white; }
     </style>
 </head>
 <body>
-    <div class="moon">🌙</div>
-    
-    <div class="flying-scene">
-        <span class="deer-emoji">🦌</span>
-        <span class="deer-emoji">🦌</span>
-        <span class="deer-emoji">🦌</span>
-        <span class="deer-emoji">🦌</span>
-        <span class="sleigh-emoji">🛷</span>
-        <span class="santa-emoji">🎅</span>
+    <div class="moon">🌕</div>
+    <div class="fly">🦌🦌🛷🎅</div>
+    <canvas id="snowCanvas"></canvas>
+    <audio id="bgMusic" loop src="www.soundhelix.com"></audio>
+
+    <div id="setup" class="card">
+        <h1 style="color:var(--gold); margin:0;">Christmas Wish 2025</h1>
+        <input type="text" id="inName" placeholder="GF का नाम">
+        <textarea id="inMsg" placeholder="आपका संदेश..."></textarea>
+        <p style="font-size:0.8rem;">अपनी फोटो चुनें (Upload):</p>
+        <input type="file" id="inFile" accept="image/*">
+        <button onclick="generate()">जादुई लिंक बनाएं</button>
+        <div id="linkBox" style="display:none; margin-top:15px; background:rgba(0,0,0,0.5); padding:10px; border-radius:10px;">
+            <p id="finalUrl" style="font-size:0.5rem; word-break:break-all;"></p>
+            <button onclick="copyLink()">Copy & Send</button>
+        </div>
     </div>
 
-    <canvas id="snowCanvas"></canvas>
-    <audio id="bgMusic" loop></audio>
-
-    <div class="container">
-        <!-- SETUP FORM -->
-        <div id="setup" class="card">
-            <h1 style="color:var(--gold); margin:0;">Christmas Wish 2025</h1>
-            <input type="text" id="inName" placeholder="उनका नाम (GF Name)">
-            <textarea id="inMsg" placeholder="आपका प्यारा मैसेज..."></textarea>
-            
-            <p style="font-size:0.8rem; margin:5px 0;">1. फोटो का Direct Link डालें (Imgur/PostImage):</p>
-            <input type="text" id="inUrl" placeholder="i.imgur.com">
-            
-            <p style="font-size:0.8rem; margin:5px 0;">2. म्यूजिक का Link डालें (MP3 URL):</p>
-            <input type="text" id="inMusic" placeholder="www.soundhelix.com">
-            
-            <button onclick="generate()">जादुई लिंक (Magic Link) बनाएं</button>
-            
-            <div id="linkBox">
-                <p id="finalUrl"></p>
-                <button onclick="copyLink()" style="background:white; color:black; width:auto;">Copy Link</button>
-                <button onclick="shorten()" style="background:cyan; color:black; width:auto;">Link छोटा करें</button>
-            </div>
-        </div>
-
-        <!-- GREETING VIEW -->
-        <div id="view" class="card hidden">
-            <h1 id="outName" style="color:var(--gold);"></h1>
-            <img id="outImg" src="" class="user-photo" onerror="this.src='via.placeholder.com'">
-            <p id="outMsg" style="font-size: 1.4rem;"></p>
-            <p>❄️ Merry Christmas ❄️</p>
-            <p style="font-size:0.7rem; opacity:0.8;">(म्यूजिक के लिए स्क्रीन पर क्लिक करें)</p>
-        </div>
+    <div id="view" class="card hidden">
+        <h1 id="outName" style="color:var(--gold);"></h1>
+        <img id="outImg" src="" class="user-photo">
+        <p id="outMsg" style="font-size: 1.4rem;"></p>
+        <p>❄️ Merry Christmas ❄️</p>
+        <p style="font-size:0.7rem;">संगीत के लिए स्क्रीन टच करें 🎵</p>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
+        let photoData = "";
+
+        // फोटो को Resize करने का लॉजिक (ताकि लिंक खराब न हो)
+        document.getElementById('inFile').onchange = function(e) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 200; // छोटा साइज़
+                    canvas.height = 200;
+                    ctx.drawImage(img, 0, 0, 200, 200);
+                    photoData = canvas.toDataURL('image/jpeg', 0.7); // High quality compression
+                };
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
 
         if (params.has('to')) {
             document.getElementById('setup').classList.add('hidden');
             document.getElementById('view').classList.remove('hidden');
             document.getElementById('outName').innerText = "For You, " + params.get('to');
             document.getElementById('outMsg').innerText = params.get('msg');
-            
-            if(params.get('img')) document.getElementById('outImg').src = params.get('img');
-            
-            const musicUrl = params.get('mus') || "www.soundhelix.com";
-            const audio = document.getElementById('bgMusic');
-            audio.src = musicUrl;
-
-            document.body.onclick = () => audio.play();
+            document.getElementById('outImg').src = params.get('img');
+            document.body.onclick = () => document.getElementById('bgMusic').play();
         }
 
         function generate() {
             const n = encodeURIComponent(document.getElementById('inName').value);
             const m = encodeURIComponent(document.getElementById('inMsg').value);
-            const i = encodeURIComponent(document.getElementById('inUrl').value);
-            const s = encodeURIComponent(document.getElementById('inMusic').value);
-            
-            const link = window.location.origin + window.location.pathname + `?to=${n}&msg=${m}&img=${i}&mus=${s}`;
+            const i = encodeURIComponent(photoData);
+            const link = window.location.origin + window.location.pathname + `?to=${n}&msg=${m}&img=${i}`;
             document.getElementById('finalUrl').innerText = link;
             document.getElementById('linkBox').style.display = "block";
         }
 
         function copyLink() {
             navigator.clipboard.writeText(document.getElementById('finalUrl').innerText);
-            alert("Link Copy हो गया!");
+            alert("Link Copy हो गया! अब उसे भेजें।");
         }
 
-        function shorten() {
-            const url = document.getElementById('finalUrl').innerText;
-            window.open(`tinyurl.com{encodeURIComponent(url)}`, '_blank');
-        }
-
-        // Snowfall Engine
+        // Snowfall Logic
         const cvs = document.getElementById('snowCanvas'); const ctx = cvs.getContext('2d');
         let f = [];
-        function init() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; f = Array.from({length: 150}, () => ({x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*3+1, s: Math.random()*2+0.5})); }
+        function init() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; f = Array.from({length: 100}, () => ({x: Math.random()*cvs.width, y: Math.random()*cvs.height, r: Math.random()*3+1, s: Math.random()*2+1})); }
         function draw() { ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle = "white"; f.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y += p.s; if(p.y > cvs.height) p.y = -10; }); requestAnimationFrame(draw); }
         window.onresize = init; init(); draw();
     </script>
