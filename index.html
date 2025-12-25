@@ -6,51 +6,50 @@
     <title>Christmas Miracle 2025</title>
     <link href="fonts.googleapis.com" rel="stylesheet">
     <style>
-        :root { --gold: #ffd700; --white: #ffffff; }
-        body { 
-            margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive;
-            background: linear-gradient(to bottom, #001b3a, #003366, #adb5bd); height: 100vh; color: white;
-        }
+        :root { --gold: #ffd700; --white: #ffffff; --night: #001b3a; }
+        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Dancing Script', cursive; background: linear-gradient(to bottom, #001b3a, #003366, #adb5bd); height: 100vh; color: white; }
         #snowCanvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
-        .moon { position: absolute; top: 40px; right: 60px; width: 120px; height: 120px; background: #fffdf5; border-radius: 50%; box-shadow: 0 0 80px 30px white; z-index: 2; }
+        
+        .moon { position: absolute; top: 40px; right: 60px; font-size: 100px; z-index: 2; text-shadow: 0 0 30px white; }
 
-        /* Full Body Animated Santa & Reindeers */
+        /* Full Body Animated Santa & Reindeers using Emojis */
         .flying-scene {
-            position: absolute; top: 15%; left: -600px;
-            display: flex; align-items: center;
-            animation: flyAcross 18s linear infinite; z-index: 5;
+            position: absolute; top: 15%; left: -600px; animation: flyAcross 18s linear infinite; z-index: 5;
+            font-size: 50px; /* Controls the size of all emojis */
         }
-        .sleigh-img { width: 250px; filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.5)); }
-        .deer-img { width: 120px; margin-right: -30px; animation: gallop 0.6s infinite alternate; }
+        .deer-emoji { animation: gallop 0.6s infinite alternate; display: inline-block; margin-right: 10px; }
 
         @keyframes flyAcross {
             0% { left: -600px; transform: scale(0.8) rotate(5deg); }
             100% { left: 110vw; transform: scale(0.8) rotate(-5deg); }
         }
-        @keyframes gallop { from { transform: translateY(0); } to { transform: translateY(-20px); } }
+        @keyframes gallop { from { transform: translateY(0); } to { transform: translateY(-15px); } }
 
+        /* LAYOUT DESIGN */
         .container { position: relative; z-index: 10; display: flex; align-items: center; justify-content: center; height: 100vh; }
         .card { background: rgba(255, 255, 255, 0.15); padding: 30px; border-radius: 25px; backdrop-filter: blur(15px); border: 2px solid var(--gold); text-align: center; width: 360px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
         .hidden { display: none; }
         
         input, textarea { width: 90%; margin: 8px 0; padding: 10px; border-radius: 10px; border: none; font-size: 0.9rem; }
-        button { background: var(--gold); color: #001b3a; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
+        button { background: var(--gold); color: var(--night); border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; margin-top: 10px; width: 100%; }
         
         .user-photo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid white; object-fit: cover; margin: 20px auto; display: block; box-shadow: 0 0 20px white; }
         #linkBox { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 15px; margin-top: 15px; display: none; font-size: 0.7rem; }
     </style>
 </head>
 <body>
-    <div class="moon"></div>
+    <div class="moon">🌙</div>
     
     <div class="flying-scene">
-        <img src="www.pngmart.com" class="deer-img">
-        <img src="www.pngmart.com" class="deer-img">
-        <img src="www.pngmart.com" class="sleigh-img">
+        <span class="deer-emoji">🦌</span>
+        <span class="deer-emoji">🦌</span>
+        <span class="deer-emoji">🦌</span>
+        <span class="deer-emoji">🦌</span>
+        <span class="sleigh-emoji">🛷</span>
+        <span class="santa-emoji">🎅</span>
     </div>
 
     <canvas id="snowCanvas"></canvas>
-    <!-- Music Player -->
     <audio id="bgMusic" loop></audio>
 
     <div class="container">
@@ -71,7 +70,7 @@
             <div id="linkBox">
                 <p id="finalUrl"></p>
                 <button onclick="copyLink()" style="background:white; color:black; width:auto;">Copy Link</button>
-                <button onclick="shorten()" style="background:cyan; color:black; width:auto;">Shorten Link</button>
+                <button onclick="shorten()" style="background:cyan; color:black; width:auto;">Link छोटा करें</button>
             </div>
         </div>
 
@@ -94,10 +93,8 @@
             document.getElementById('outName').innerText = "For You, " + params.get('to');
             document.getElementById('outMsg').innerText = params.get('msg');
             
-            // Image Load Logic
             if(params.get('img')) document.getElementById('outImg').src = params.get('img');
             
-            // Music Load Logic
             const musicUrl = params.get('mus') || "www.soundhelix.com";
             const audio = document.getElementById('bgMusic');
             audio.src = musicUrl;
@@ -118,7 +115,7 @@
 
         function copyLink() {
             navigator.clipboard.writeText(document.getElementById('finalUrl').innerText);
-            alert("Link Copied!");
+            alert("Link Copy हो गया!");
         }
 
         function shorten() {
